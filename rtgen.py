@@ -1,6 +1,7 @@
 import registry
-from utils import pascal
+from utils import pascal, camel
 import sys
+import lua
 
 reg = registry.get()
 
@@ -26,9 +27,15 @@ out += "end\n"
 pattern_names: dict[str, str] = {}
 pattern_uname_ids: dict[str, str] = {}
 for pattern in reg["patterns"].values():
-    mod, name = pattern["id"].split(":")
-    pattern_names[pattern["id"]] = f"{mod}{pascal(name.replace('/', '_'))}"
-    pattern_uname_ids[pattern["name"]] = pattern["id"]
+    id = pattern["id"]
+    mod, name = id.split(":")
+    if mod == "hexcasting":
+        pattern_names[id] = f"{camel(name.replace('/', '_'))}"
+    else:
+        pattern_names[id] = f"{camel(mod)}{pascal(name.replace('/', '_'))}"
+    if pattern_names[id] in lua.keywords or pattern_names[id][0].isdigit():
+        pattern_names[id] = "_" + pattern_names[id]
+    pattern_uname_ids[pattern["name"]] = id
 if len(sys.argv) > 1:
     with open(sys.argv[1], "r", encoding="utf-8") as f:
         data = f.read()
