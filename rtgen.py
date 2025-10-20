@@ -47,7 +47,7 @@ for pattern in reg["patterns"].values():
     for op in pattern["operators"]:
         desc = op["description"].replace("\n", "\n--- ")
         signature = f"{op['inputs']} -> {op['outputs']}"
-        out += f"--- [[{op['mod_id']}: {signature}]]({op['book_url']}) {desc}\n"
+        out += f"--- [[{op['mod_id']}: {signature}]]({op['book_url']}) {desc}<br/>\n"
 
     out += f"function Spellmagica:{name}()"
     out += f'self:p"{pattern["signature"]}"'
