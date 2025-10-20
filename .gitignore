@@ -1,5 +1,6 @@
 __pycache__
 .vscode
 registry.json
+spellmagica.lua
 spellmagica.test.lua
 spellmagica.types.lua
