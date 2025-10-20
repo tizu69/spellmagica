@@ -17,7 +17,7 @@ The syntax section of this document contains some collapsed examples. These are 
 
 Like the old "syntax", the last item in the array is the "uppermost" stack item, that is to say, the iota of the top of the stack.
 
-This proposal proposes a JSON-based tree syntax for types. Depending on the implementation in Hexcasting, this may be another format, like XML, a Builder pattern in Code, or something else with similar structure. Tools that export documentation to JSON (like HexBug) should use `inputs` and `outputs` keys to indicate input and output types, both of which are an array.
+This proposal proposes a JSON-based tree syntax for types. Depending on the implementation in Hexcasting, this may be another format, like XML, a Builder pattern in Code, or something else with similar structure. HexBug exports and patchouli entries should use `inputs` and `outputs` keys to indicate input and output types, both of which are an array.
 
 As such, any type root should be an array. If no input or output types are given, this proposal suggests an empty array, `[]`, although a `null` may also be feasible. This should not be mixed, so choose globally.
 
@@ -192,6 +192,33 @@ This is a black box - it does not define the length of taken iotas. It should **
 "..."
 ```
 
+A **named type** is a new type used for cases where order does not imply meaning. It wraps existing types and is written as an object with a `name` and a `type` key. When stringified for documentation purposes, the name should be appended after the type, separated with brackets, like `string<url>`.
+
+```json
+{ "name": "url", "type": "moreiotas:string" }
+```
+
+<details>
+<summary>Tests</summary>
+
+### Valid 
+
+```json
+"http://example.com"
+```
+
+```json
+"foo"
+```
+
+### Invalid
+
+```json
+123.45
+```
+</details>
+
+
 ## Metatypes
 
 Not all types are "real". For example, a `hexcasting:vector` is not really a real type, but moreso, a `tuple` of three `hexcasting:number`s. These metatypes should be defined in HexBug in a `metatypes` key. How this works in-game is unspecified, as this is mostly for documentation and machine parsing purposes.
@@ -201,7 +228,14 @@ Not all types are "real". For example, a `hexcasting:vector` is not really a rea
     "metatypes": {
         "hexcasting:vector": {
             "tuple": ["hexcasting:number", "hexcasting:number", "hexcasting:number"]
-        }
+        }, // or...
+        "hexcasting:vector_": {
+            "tuple": [
+                { "name": "X", "type": "hexcasting:number" } 
+                { "name": "Y", "type": "hexcasting:number" } 
+                { "name": "Z", "type": "hexcasting:number" }
+            ]
+        } // this would not get represented in-game, as the book would show "vector", not the tuple.
     }
 }
 ```
