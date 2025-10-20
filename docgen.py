@@ -2,6 +2,7 @@ import registry
 import hextypes
 import lua
 from utils import camel
+import sys
 
 reg = registry.get()
 
@@ -39,6 +40,8 @@ for pattern in reg["patterns"].values():
         desc = op["description"].replace("\n", "\n--- ")
         out += f"--- [[{op['mod_id']}]]({op['book_url']}) {desc}<br/>\n"
         if op["inputs"] != None:
+            if "..." in op["inputs"] or "many" in op["inputs"]:
+                continue
             args = hextypes.split(op["inputs"])
             argsN = max(argsN, len(args))
             for i, arg in enumerate(args):
@@ -47,6 +50,8 @@ for pattern in reg["patterns"].values():
                 if arg not in argsT[i]:
                     argsT[i].append(arg.strip())
         if op["outputs"] != None:
+            if "..." in op["outputs"] or "many" in op["outputs"]:
+                continue
             rets = hextypes.split(op["outputs"])
             for i, ret in enumerate(rets):
                 if i >= len(retsT):
@@ -82,3 +87,9 @@ out += "function Spellmagica.garbage() end\n\n"
 
 out += "return Spellmagica"
 print(out)
+
+if len(hextypes.alreadyLoggedMissingTypes) > 0:
+    print(
+        f"{len(hextypes.alreadyLoggedMissingTypes)} missing types encountered.",
+        file=sys.stderr,
+    )

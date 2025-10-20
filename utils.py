@@ -1,3 +1,7 @@
+def pascal(snake: str):
+    return "".join(x.capitalize() for x in snake.lower().split("_"))
+
+
 def camel(snake: str):
-    cstr = "".join(x.capitalize() for x in snake.lower().split("_"))
-    return cstr[0].lower() + cstr[1:]
+    psc = pascal(snake)
+    return psc[0].lower() + psc[1:]
