@@ -21,7 +21,7 @@ if runtimeDocs:
 
 if not production:
     out += "\n--- Creates a new Spell builder.\n"
-    out += "--- @param pw table<string,string> Per-world signatures\n"
+    out += "--- @param pw table<string,string>? Per-world signatures\n"
     out += "--- @return Spellmagica\n"
 out += "function Spellmagica.new(pw)"
 out += "return setmetatable({hex={},pw=pw},{__index=Spellmagica})"
