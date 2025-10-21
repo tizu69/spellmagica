@@ -6,3 +6,9 @@ keywords = [
     "then",		"true",		"until",	"while",
 ]
 # fmt: on
+
+
+def str(s: str) -> str:
+    """Escape a string for Lua source code."""
+    s = s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
+    return f'"{s}"'
