@@ -66,12 +66,12 @@ for pattern in reg["patterns"].values():
             signature = f"{op['inputs']} -> {op['outputs']}"
             out += f"--- [[{op['mod_id']}: {signature}]]({op['book_url']}) {desc}<br/>\n"
 
-    out += f"function Spellmagica:{name}()"
+    out += f"function Spellmagica:{name}(...)"
     if not pattern["is_per_world"]:
         out += f'self:p"{pattern["signature"]}"'
     else:
         out += f'self:p(self.pw["{name}"] or error("No per-world signature for {name}"))'
-    out += "end "
+    out += "return self end "
 
     if runtimeDocs:
         out += f'Spellmagica.docs["{name}"]={{'
