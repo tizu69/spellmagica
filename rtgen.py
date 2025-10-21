@@ -17,16 +17,17 @@ out += "local Spellmagica={}"
 
 if not production:
     out += "\n--- Creates a new Spell builder.\n"
+    out += "--- @param pw table<string,string> Per-world signatures\n"
     out += "--- @return Spellmagica\n"
-out += "function Spellmagica.new()"
-out += "return setmetatable({},{__index=Spellmagica})"
+out += "function Spellmagica.new(pw)"
+out += "return setmetatable({hex={},pw=pw},{__index=Spellmagica})"
 out += "end "
 
 if not production:
     out += "\n--- Pushes a pattern onto the stack.\n"
     out += "--- @param pattern string\n"
 out += "function Spellmagica:p(pattern)"
-out += 'table.insert(self, {startDir="EAST",angles=pattern})'
+out += 'table.insert(self.hex, {startDir="EAST",angles=pattern})'
 out += "end "
 
 pattern_names: dict[str, str] = {}
@@ -62,7 +63,10 @@ for pattern in reg["patterns"].values():
             out += f"--- [[{op['mod_id']}: {signature}]]({op['book_url']}) {desc}<br/>\n"
 
     out += f"function Spellmagica:{name}()"
-    out += f'self:p"{pattern["signature"]}"'
+    if not pattern["is_per_world"]:
+        out += f'self:p"{pattern["signature"]}"'
+    else:
+        out += f'self:p(self.pw["{name}"] or error("No per-world signature for {name}"))'
     out += "end "
     # pname = pattern["name"].replace('"', '\\"')
     # out += f'Spellmagica["{pname}"]={{c=Spellmagica.{name}}}\n'
