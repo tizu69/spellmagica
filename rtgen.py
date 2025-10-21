@@ -38,6 +38,13 @@ out += "return self "
 out += "end "
 
 if not production:
+    out += "\n--- Push a block onto the stack.\n"
+    out += "--- @param b function\n"
+out += "function Spellmagica:block(b)"
+out += "return self:closeParen(b(self:openParen()))"
+out += "end "
+
+if not production:
     out += "\n--- Returns a pattern.\n"
     out += "--- @param p string\n"
     out += "--- @return {startDir:string,angles:string}\n"
@@ -54,11 +61,7 @@ if not production:
             out += f"{t if hextypes.native(mapped) else mapped}|"
     out = out[:-1] + "\n"  # Remove trailing |
 out += "function Spellmagica:push(v)"
-out += "self:openParen()"
-out += "table.insert(self.hex, v)"
-out += "self:closeParen()"
-out += "self:splat()"
-out += "return self "
+out += "return self:block(function()table.insert(self.hex, v)end):splat()"
 out += "end "
 
 pattern_names: dict[str, str] = {}
